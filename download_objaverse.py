@@ -14,6 +14,7 @@ def get_filename_from_abs_path(abs_path):
 def get_filename_no_ext(filename):
     return os.path.splitext(filename)[0]
 
+
 def load_obj_uids(json_file):
     selected_uids = []
     with open(json_file, 'r') as f:
@@ -24,16 +25,28 @@ def load_obj_uids(json_file):
     
     return selected_uids
 
-# def load_lvis_annotations():
-#     lvis_annotations = objaverse.load_lvis_annotations()
-#     lvis_annotations = {k.lower(): v for k, v in lvis_annotations.items()}
-#     return lvis_annotations
+
+def load_lvis_annotations():
+    lvis_annotations = objaverse.load_lvis_annotations()
+    lvis_annotations = {k.lower(): v for k, v in lvis_annotations.items()}
+    return lvis_annotations
+
 
 def download_objaverse(args):
     processes = multiprocessing.cpu_count()
     output_dir = args.output_dir
 
-    selected_uids = load_obj_uids('./obj_name_path_rendered.json')
+    if args.use_lvis:
+        lvis_annot = load_lvis_annotations()
+        # sorted_lvis_annot = sorted(lvis_annot.items(), key=lambda item: len(item[1]), reverse=True)
+        selected_uids = []
+        object_names_list = ['chair']   # Please refer to objaverse_object_names.txt for all object names
+        for object_name in object_names_list:
+            if object_name in lvis_annot:
+                selected_uids += lvis_annot[object_name]
+    else:
+        selected_uids = load_obj_uids('./obj_name_path_rendered.json')
+    
     start_index = args.start_index
     end_index = len(selected_uids) if args.end_index == -1 else args.end_index
     selected_uids = selected_uids[start_index:end_index]
@@ -94,6 +107,10 @@ if __name__ == '__main__':
     parser.add_argument(
         "--end_index", type=int, default=-1,
         help="end index to download the objects"
+    )
+    parser.add_argument(
+        "--use_lvis", action='store_true', default=False,
+        help="whether to use lvis annotations"
     )
     args = parser.parse_args()
 
