@@ -43,6 +43,7 @@ which blender  # return "/snap/bin/blender"
 # render views using blender-python
 /snap/bin/blender --python --background bpy_render_views.py -- --json_path data_objaverse/obj_name_path_0_50.json --output_path data_objaverse_render/ --num_views 100 --resolution 800 800 --device cuda
 
+
 # convert into NeRFStudio data format
 python transform_ns_format.py --input_dir data_objaverse_render/
 ```
