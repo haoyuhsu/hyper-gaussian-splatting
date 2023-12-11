@@ -310,9 +310,13 @@ if __name__ == "__main__":
     #                  " synthetic Blender scenes.")
     # )
     parser = ArgumentParserForBlender()
+    # parser.add_argument(
+    #     "--json_path", type=str, default=None,
+    #     help="Path to the blend-file of the synthetic Blender scene."
+    # )
     parser.add_argument(
-        "--json_path", type=str,
-        help="Path to the blend-file of the synthetic Blender scene."
+        "--data_dir", type=str, default=None,
+        help="Path to the dataset directory."
     )
     parser.add_argument(
         "--output_path", type=str,
@@ -345,9 +349,16 @@ if __name__ == "__main__":
     args = parser.parse_args()
     args.upper_views = True if random.randint(0, 2) == 1 else False
 
-    json_path = args.json_path
-    with open(json_path, "r") as fp:
-        obj_name_to_filepath = json.load(fp)
+    # json_path = args.json_path
+    # with open(json_path, "r") as fp:
+    #     obj_name_to_filepath = json.load(fp)
+
+    data_dir = args.data_dir
+    obj_name_to_filepath = {}
+    for data_path in os.listdir(data_dir):
+        if data_path.endswith('.glb') or data_path.endswith('.gltf') or data_path.endswith('.obj'):
+            obj_name = data_path[:-4]
+            obj_name_to_filepath[obj_name] = os.path.join(data_dir, data_path)
     
     num_process = 6
     process_pool = Pool(num_process)
