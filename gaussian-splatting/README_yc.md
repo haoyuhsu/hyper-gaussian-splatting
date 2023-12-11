@@ -4,9 +4,14 @@
 
 ## building blender
 Reference: https://wiki.blender.org/wiki/Building_Blender/Linux/Ubuntu
+```
 sudo apt install build-essential git subversion cmake libx11-dev libxxf86vm-dev libxcursor-dev libxi-dev libxrandr-dev libxinerama-dev libegl-dev
 sudo apt install libwayland-dev wayland-protocols libxkbcommon-dev libdbus-1-dev linux-libc-dev
 sudo apt install libsm6
+
+# or all in once
+sudo apt install build-essential git subversion cmake libx11-dev libxxf86vm-dev libxcursor-dev libxi-dev libxrandr-dev libxinerama-dev libegl-dev -y && sudo apt install libwayland-dev wayland-protocols libxkbcommon-dev libdbus-1-dev linux-libc-dev -y && sudo apt install libsm6 -y
+```
 
 
 
