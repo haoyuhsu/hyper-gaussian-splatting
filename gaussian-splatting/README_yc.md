@@ -2,19 +2,6 @@
 
 # Gaussian Splatting
 
-## building blender
-Reference: https://wiki.blender.org/wiki/Building_Blender/Linux/Ubuntu
-```
-sudo apt install build-essential git subversion cmake libx11-dev libxxf86vm-dev libxcursor-dev libxi-dev libxrandr-dev libxinerama-dev libegl-dev
-sudo apt install libwayland-dev wayland-protocols libxkbcommon-dev libdbus-1-dev linux-libc-dev
-sudo apt install libsm6
-
-# or all in once
-sudo apt install build-essential git subversion cmake libx11-dev libxxf86vm-dev libxcursor-dev libxi-dev libxrandr-dev libxinerama-dev libegl-dev -y && sudo apt install libwayland-dev wayland-protocols libxkbcommon-dev libdbus-1-dev linux-libc-dev -y && sudo apt install libsm6 -y
-```
-
-
-
 ## Setup environment
 
 1. install cuda=11.8
@@ -40,6 +27,20 @@ pip install tqdm plyfile
 ```
 
 
+## Training
+1. train one gs
+```
+./train_gs.sh
+```
+
+2. train batch
+```
+python get_dist_train_cmd.py
+```
+which will output `train_gs_cmd_{today}.txt`
+Run command written in `train_gs_cmd_{today}.txt` on server
+
+
 ## Visualize
 
 
@@ -52,3 +53,6 @@ pip install tqdm plyfile
 cd SIBR_viwers
 # ./install/bin/SIBR_PointBased_app --path ../data/tandt_db/tandt/train --outPath ../output/04f3aea1-8
 ./install/bin/SIBR_gaussianViewer_app --iteration 30000 --m ../output/04f3aea1-8 --path ../data/tandt_db/tandt/train
+
+3. rendering
+./rend_gs.sh
