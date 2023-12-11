@@ -2,6 +2,14 @@
 
 # Gaussian Splatting
 
+## building blender
+Reference: https://wiki.blender.org/wiki/Building_Blender/Linux/Ubuntu
+sudo apt install build-essential git subversion cmake libx11-dev libxxf86vm-dev libxcursor-dev libxi-dev libxrandr-dev libxinerama-dev libegl-dev
+sudo apt install libwayland-dev wayland-protocols libxkbcommon-dev libdbus-1-dev linux-libc-dev
+sudo apt install libsm6
+
+
+
 ## Setup environment
 
 1. install cuda=11.8
@@ -17,7 +25,12 @@ conda activate gs
 
 # Install packages
 # conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 pytorch-cuda=11.6 -c pytorch -c nvidia
-conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia # check your cuda
+# conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
+
+pip install submodules/diff-gaussian-rasterization
+pip install submodules/simple-knn
+
 pip install tqdm plyfile
 ```
 

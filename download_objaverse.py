@@ -40,7 +40,7 @@ def download_objaverse(args):
         lvis_annot = load_lvis_annotations()
         # sorted_lvis_annot = sorted(lvis_annot.items(), key=lambda item: len(item[1]), reverse=True)
         selected_uids = []
-        object_names_list = ['chair']   # Please refer to objaverse_object_names.txt for all object names
+        object_names_list = ['chair', 'sword', 'armor', 'mug', 'shoe', 'motor_vehicle', 'car_(automobile)']   # Please refer to objaverse_object_names.txt for all object names
         for object_name in object_names_list:
             if object_name in lvis_annot:
                 selected_uids += lvis_annot[object_name]

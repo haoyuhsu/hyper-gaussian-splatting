@@ -346,6 +346,12 @@ if __name__ == "__main__":
         "--upper_views", action="store_true",
         help="Only sample novel views from the upper hemisphere."
     )
+
+    # added by yc. for distributed rendering
+    parser.add_argument("--start_index", type=int, default=0,
+        help="start index to download the objects")
+    parser.add_argument("--end_index", type=int, default=-1,)
+
     args = parser.parse_args()
     args.upper_views = True if random.randint(0, 2) == 1 else False
 
@@ -355,15 +361,20 @@ if __name__ == "__main__":
 
     data_dir = args.data_dir
     obj_name_to_filepath = {}
-    for data_path in os.listdir(data_dir):
+    for data_path in sorted(os.listdir(data_dir)):
         if data_path.endswith('.glb') or data_path.endswith('.gltf') or data_path.endswith('.obj'):
             obj_name = data_path[:-4]
             obj_name_to_filepath[obj_name] = os.path.join(data_dir, data_path)
     
     num_process = 6
     process_pool = Pool(num_process)
-    obj_names = list(obj_name_to_filepath.keys())
+    all_obj_names = list(obj_name_to_filepath.keys())
+    all_obj_names = sorted(all_obj_names)
 
+    # to render
+    obj_names = all_obj_names[args.start_index:args.end_index]
+    print(f"[*] total rend: {len(obj_names)} render start name: {obj_names[0]} end name: {obj_names[-1]}")
+    
     i = 0
     while i < len(obj_names):
         k = 0
