@@ -170,7 +170,11 @@ def main(args, blend_path, blend_name):
     print('open file')
     reset_scene()
     # bpy.ops.wm.open_mainfile(filepath=args.blend_path)
-    bpy.ops.import_scene.gltf(filepath=blend_path, merge_vertices=True)
+    if blend_path.endswith('.obj'):
+        # bpy.ops.import_scene.obj(filepath=blend_path, merge_vertices=True)
+        bpy.ops.wm.obj_import(filepath=obj_path)
+    elif blend_path.endswith('.glb') or blend_path.endswith('.gltf'):
+        bpy.ops.import_scene.gltf(filepath=blend_path, merge_vertices=True)
     print('file opened!')
 
     # initialize render settings
@@ -216,6 +220,8 @@ def main(args, blend_path, blend_name):
         scene.render.image_settings.use_zbuffer = False
 
     # initialize camera settings
+    scene.cycles.samples = 32
+    scene.cycles.use_denoising = True
     scene.render.dither_intensity = 0.0
     scene.render.film_transparent = True
     scene.render.resolution_percentage = 100
@@ -365,6 +371,12 @@ if __name__ == "__main__":
         if data_path.endswith('.glb') or data_path.endswith('.gltf') or data_path.endswith('.obj'):
             obj_name = data_path[:-4]
             obj_name_to_filepath[obj_name] = os.path.join(data_dir, data_path)
+        else:
+            # if not a file, then it is a folder contains texture images, .mtl and .obj.
+            obj_name = data_path
+            # if texture images exist, then we render the model. (avoid empty texture model)
+            # if os.path.isdir(os.path.join(data_dir, data_path, 'images')):
+            obj_name_to_filepath[obj_name] = os.path.join(data_dir, data_path, 'model.obj')
     
     num_process = 6
     process_pool = Pool(num_process)
