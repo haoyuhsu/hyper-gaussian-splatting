@@ -11,6 +11,17 @@
 - reference: https://wiki.blender.org/wiki/Building_Blender/Other/BlenderAsPyModule
 - ***attempt once but failed.***
 
+#### NOTE: packages required for blender on server
+- Building blender. Reference: https://wiki.blender.org/wiki/Building_Blender/Linux/Ubuntu
+```
+sudo apt install build-essential git subversion cmake libx11-dev libxxf86vm-dev libxcursor-dev libxi-dev libxrandr-dev libxinerama-dev libegl-dev
+sudo apt install libwayland-dev wayland-protocols libxkbcommon-dev libdbus-1-dev linux-libc-dev
+sudo apt install libsm6
+
+# or all in once
+sudo apt install build-essential git subversion cmake libx11-dev libxxf86vm-dev libxcursor-dev libxi-dev libxrandr-dev libxinerama-dev libegl-dev -y && sudo apt install libwayland-dev wayland-protocols libxkbcommon-dev libdbus-1-dev linux-libc-dev -y && sudo apt install libsm6 -y
+```
+
 ### Install Python packages
 ```
 pip install objaverse
@@ -70,3 +81,18 @@ ns-viewer --load-config outputs/1ec7f/nerfacto/2023-11-13_234331/config.yml
 # render videos from interpolated training path
 ns-render interpolate --load-config outputs/1ec7f/nerfacto/2023-11-13_234331/config.yml --output-path outputs/1ec7f/render.mp4
 ```
+
+### (YC) Pipeline for preparing Objaverse data
+1. download objaverse
+```
+# NOTE: need to specify the class from of lvis. modify in download_objaverse.py
+dl_objaverse.sh
+```
+
+2. render (distributed)
+run
+```
+get_dist_rend_cmd.py
+```
+which will output `gs_cmd_1211.txt`
+copy command in the txt file and run on server

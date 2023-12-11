@@ -220,7 +220,10 @@ def main(args, blend_path, blend_name):
         scene.render.image_settings.use_zbuffer = False
 
     # initialize camera settings
-    scene.cycles.samples = 32
+    if 'shapenet' in blend_path:
+        scene.cycles.samples = 32
+    else:
+        scene.cycles.samples = 4096
     scene.cycles.use_denoising = True
     scene.render.dither_intensity = 0.0
     scene.render.film_transparent = True
