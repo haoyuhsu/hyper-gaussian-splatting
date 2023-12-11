@@ -1,0 +1,5 @@
+# we have airplane, car, chair, table
+/opt/blender-4.0.2-linux-x64/blender --background --python bpy_render_views.py -- --data_dir ./data_shapenet_airplane --output_path data_shapenet_airplane_render/ --num_views 100 --resolution 800 800 --device cuda
+/opt/blender-4.0.2-linux-x64/blender --background --python bpy_render_views.py -- --data_dir ./data_shapenet_car --output_path data_shapenet_car_render/ --num_views 100 --resolution 800 800 --device cuda
+/opt/blender-4.0.2-linux-x64/blender --background --python bpy_render_views.py -- --data_dir ./data_shapenet_chair --output_path data_shapenet_chair_render/ --num_views 100 --resolution 800 800 --device cuda
+/opt/blender-4.0.2-linux-x64/blender --background --python bpy_render_views.py -- --data_dir ./data_shapenet_table --output_path data_shapenet_table_render/ --num_views 100 --resolution 800 800 --device cuda

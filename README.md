@@ -38,11 +38,21 @@ python download_objaverse.py \
     --end_index $END_INDEX \
     --use_lvis True  # if need specific categories
 
+# download assets from ShapeNet
+wget http://shapenet.cs.stanford.edu/shapenet/obj-zip/ShapeNetCore.v1.zip
+python download_shapenet.py \
+    --shapenet_dir ../ShapeNetCore.v1/
+    --output_dir .
+
 # find blender bin path
 which blender  # return "/snap/bin/blender"
 
-# render views using blender-python
-/snap/bin/blender --background --python bpy_render_views.py -- --data_dir ./data_objaverse --output_path data_objaverse_render/ --num_views 100 --resolution 800 800 --device cuda
+# render views using blender-python for objaverse
+/opt/blender-4.0.2-linux-x64/blender --background --python bpy_render_views.py -- --data_dir ./data_objaverse --output_path data_objaverse_render/ --num_views 100 --resolution 800 800 --device cuda
+
+# render views using blender-python for shapenet
+bash render_shapenet.sh
+# /opt/blender-4.0.2-linux-x64/blender --background --python bpy_render_views.py -- --data_dir ./data_shapenet_airplane --output_path data_shapenet_airplane_render/ --num_views 100 --resolution 800 800 --device cuda
 
 
 # convert into NeRFStudio data format

@@ -93,8 +93,7 @@ def download_objaverse(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description=("Script for rendering novel views of"
-                     " synthetic Blender scenes.")
+        description=("Script for getting assets from Objaverse.")
     )
     parser.add_argument(
         "--output_dir", type=str,
