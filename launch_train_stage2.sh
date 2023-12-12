@@ -6,14 +6,18 @@ gpu_id=$1
 kl_weight=$2
 # kl_weight=0
 
+# lr=1e-3
+lr=$3
+
 opac_weight=1e-3
 scale_weight=1e-2
+z_dim=2048
 
 # TODO: norm gt rots?
 
-exp_name="${DATE_WITH_TIME}-kl_${kl_weight}-opac_${opac_weight}-scale_${scale_weight}"
+exp_name="${DATE_WITH_TIME}-lr_${lr}-z_${z_dim}-kl_${kl_weight}-opac_${opac_weight}-scale_${scale_weight}"
 
-cmd="python train_second_stage.py --exp_name ${exp_name} --kl_weight ${kl_weight} \
+cmd="python train_second_stage.py --exp_name ${exp_name} --lr ${lr} --kl_weight ${kl_weight} \
                     --opac_weight ${opac_weight} --scale_weight ${scale_weight}"
             
 echo CUDA_VISIBLE_DEVICES=${gpu_id} $cmd

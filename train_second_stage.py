@@ -141,7 +141,7 @@ if __name__ == "__main__":
             pbar.set_description(loss_str)
 
         # render: recon
-        if i % 2500 == 0:
+        if i % 5000 == 0:
             
             rend_recon, rend_gt = model.recon(data)
             rend_pred = model.inference(bs=args.batch_size)
@@ -155,7 +155,7 @@ if __name__ == "__main__":
             writer.add_image('2-pred', rend_pred, i)
             
         # save model
-        if i % 10000 == 0 or i == args.niters - 1:
+        if i % 15000 == 0 or i == args.niters - 1:
             save_path = f'{ckpt_dir}/iter_{i}.pth'
             model.save_ckpt(save_path)
             
