@@ -72,12 +72,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--exp_name', type=str, default='stage2_model')
     parser.add_argument('--batch_size', type=int, default=16)
-    parser.add_argument('--niters', type=int, default=10000)
+    parser.add_argument('--niters', type=int, default=1000000)
     parser.add_argument('--lr', type=float, default=1e-4)
     
     # model
     parser.add_argument('--z_dim', type=int, default=1024)
     parser.add_argument('--kl_weight', type=float, default=1e-4)
+
+    parser.add_argument('--opac_weight', type=float, default=1e-3)
+    parser.add_argument('--scale_weight', type=float, default=1e-2)
     
     args = parser.parse_args()
     
@@ -138,17 +141,18 @@ if __name__ == "__main__":
             pbar.set_description(loss_str)
 
         # render: recon
-        if i % 5000 == 0:
+        if i % 2500 == 0:
             
-            rend_recon = model.recon(data)
+            rend_recon, rend_gt = model.recon(data)
             rend_pred = model.inference(bs=args.batch_size)
 
-            rend_recon, rend_gt = vutils.make_grid(rend_recon, nrow=4, normalize=True)
+            rend_gt = vutils.make_grid(rend_gt, nrow=4, normalize=True)
+            rend_recon = vutils.make_grid(rend_recon, nrow=4, normalize=True)
             rend_pred = vutils.make_grid(rend_pred, nrow=4, normalize=True)
 
-            writer.add_image('recon', rend_gt, i)
-            writer.add_image('recon', rend_recon, i)
-            writer.add_image('pred', rend_pred, i)
+            writer.add_image('0-gt', rend_gt, i)
+            writer.add_image('1-recon', rend_recon, i)
+            writer.add_image('2-pred', rend_pred, i)
             
         # save model
         if i % 10000 == 0 or i == args.niters - 1:

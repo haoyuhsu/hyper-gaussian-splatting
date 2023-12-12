@@ -165,22 +165,26 @@ class GenGSModel:
         # chamfer for pred_xyz, gt_xyz
         loss_xyz, _ = chamfer_distance(pred_xyz, gt_xyz)
         
-        loss_opacities = F.mse_loss(pred_opacities, gt_opacities)
+        loss_opacities = F.mse_loss(pred_opacities, gt_opacities) * self.args.opac_weight
         loss_sh_dc = F.l1_loss(pred_features_dc, gt_features_dc)
         loss_sh_extra = F.l1_loss(pred_features_extra, gt_features_extra)
         
-        loss_scales = F.mse_loss(pred_scales, gt_scales)
+        loss_scales = F.mse_loss(pred_scales, gt_scales) * self.args.scale_weight
         loss_rots = F.mse_loss(pred_rots, gt_rots)
 
         # kl divergence loss
         loss_kl = -0.5 * torch.sum(1 + ret_dict['logvar'] - ret_dict['mu'].pow(2) - ret_dict['logvar'].exp())
+        loss_kl *= self.args.kl_weight
 
-        loss = loss_xyz + loss_opacities + loss_sh_dc + loss_sh_extra + loss_scales + loss_rots + self.args.kl_weight * loss_kl
+        loss = loss_xyz + loss_opacities + \
+               loss_sh_dc + loss_sh_extra + \
+               loss_scales  + loss_rots + loss_kl
         
         loss_dict = {
-            'loss_total': loss.item(), 'loss_xyz': loss_xyz.item(), 'loss_opacities': loss_opacities.item(),
-            'loss_sh_dc': loss_sh_dc.item(), 'loss_sh_extra': loss_sh_extra.item(), 'loss_scales': loss_scales.item(),
-            'loss_rots': loss_rots.item()
+            'loss_all': loss.item(), 'loss_kl': loss_kl.item(),
+            'loss_xyz': loss_xyz.item(), 'loss_opac': loss_opacities.item(),
+            'loss_sh_dc': loss_sh_dc.item(), 'loss_sh_ex': loss_sh_extra.item(), 'loss_scales': loss_scales.item(),
+            'loss_rots': loss_rots.item(),
         }
         self.loss_dict = loss_dict
         

@@ -1,2 +1,7 @@
 data_*/
 outputs/
+__pycache__/
+
+
+logs/
+tmp/
