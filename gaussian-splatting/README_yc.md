@@ -18,12 +18,31 @@ conda activate gs
 # Install packages
 # conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 pytorch-cuda=11.6 -c pytorch -c nvidia
 conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia # check your cuda
-# conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
+# conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia # aws
 
 pip install submodules/diff-gaussian-rasterization
 pip install submodules/simple-knn
 
 pip install tqdm plyfile
+
+```
+
+```
+## with pytorch3d
+conda create --name gs-v2 python=3.9 -y && conda activate gs-v2
+
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y # aws with cuda=11.8
+
+# install pytorch3d. remember to export path of cuda for 11.8
+# export PATH="/usr/local/cuda-11.8/bin:$PATH"
+# export LD_LIBRARY_PATH="/usr/local/cuda-11.8/lib64:$LD_LIBRARY_PATH"
+pip install "git+https://github.com/facebookresearch/pytorch3d.git@stable"
+
+pip install submodules/diff-gaussian-rasterization
+pip install submodules/simple-knn
+
+pip install tqdm plyfile einops
+
 ```
 
 
@@ -39,6 +58,10 @@ python get_dist_train_cmd.py
 ```
 which will output `train_gs_cmd_{today}.txt`
 Run command written in `train_gs_cmd_{today}.txt` on server
+```
+# in tmux
+cd /nfs/ycheng/hyper-gaussian-splatting/gaussian-splatting; sa gs
+```
 
 
 ## Visualize

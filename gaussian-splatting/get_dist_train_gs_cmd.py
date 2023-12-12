@@ -26,6 +26,7 @@ cmd_txt = f'train_gs_cmd_{today}.txt'
 fp = open(cmd_txt, 'w')
 
 N_obj = 1182
+port_init = 6009
 
 N_node = len(node_list)
 N_gpus = 8
@@ -46,7 +47,7 @@ for i in range(N_node):
     for j in range(N_gpus):
         start_index = i * N_gpus * N_obj_per_gpu + j * N_obj_per_gpu
         end_index = start_index + N_obj_per_gpu
-        cmd = f"python train_gs_batch.py --gpu_id {j} --start_index {start_index} --end_index {end_index}"
+        cmd = f"python train_gs_batch.py --gpu_id {j} --start_index {start_index} --end_index {end_index} --port {port_init + j}"
         # print(cmd)
         fp.write(cmd + '\n')
 

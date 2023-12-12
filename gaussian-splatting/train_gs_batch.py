@@ -8,6 +8,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--gpu_id', type=int, default=0)
 parser.add_argument('--start_index', type=int, default=0)
 parser.add_argument('--end_index', type=int, default=1)
+parser.add_argument('--port', type=int, default=6009)
 # parser.add_argument('-n', '--note', type=str, default="limit-pts=4096-max10000-Dense")
 args = parser.parse_args()
 
@@ -34,6 +35,6 @@ for ix, objv_id in tqdm(enumerate(sub_objv_ids), total=len(sub_objv_ids)):
     # model_path = "output/$objv_id-$note"
     model_path = f"{gs_out_root}/{objv_id}"
 
-    cmd = f"CUDA_VISIBLE_DEVICES={args.gpu_id} python train.py -s {dset_path} -m {model_path}"
+    cmd = f"CUDA_VISIBLE_DEVICES={args.gpu_id} python train.py -s {dset_path} -m {model_path} --port {args.port}"
     print(cmd)
     os.system(cmd)
