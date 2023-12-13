@@ -135,6 +135,8 @@ class GenGSModel:
             input[k] = v.to(self.args.device)
         
     def train_one_batch(self, data):
+
+        self.model.train()
         
         # ply_dict = data.copy()
         # rend = self.render(ply_dict)
@@ -196,6 +198,7 @@ class GenGSModel:
     @torch.no_grad()
     def recon(self, data):
         
+        self.model.eval()
         dec_dict, ret_dict = self.model(data)
         rend_recon = self.render(dec_dict)
 
@@ -203,8 +206,10 @@ class GenGSModel:
         # vutils.save_image(rend, 'tmp/rend.png')
         return rend_recon, rend_gt
     
+    @torch.no_grad()
     def inference(self, bs=16):
         
+        self.model.eval()
         z = torch.randn(bs, self.args.z_dim).to(self.args.device)
         dec_dict = self.model.decode(z)
 

@@ -2,6 +2,7 @@ import os
 import sys
 import argparse
 
+import numpy as np
 from tqdm import tqdm
 
 # torch
@@ -48,16 +49,94 @@ def test_render():
         camera = loadCamSimple(c, id, device="cuda")
         cam_list.append(camera)
 
-    # render
-    cam0 = cam_list[0]
+    # render 10 images
+    rend_dir = f"paper_figs/rend/{objv_id}"
+    if not os.path.exists(rend_dir): os.makedirs(rend_dir)
 
-    ret = render_simple(cam0, gaussians, background)
-    rendering = ret["render"]
+    nview = 5
+    # rend_ixs = range(0, len(cam_list), len(cam_list) // nview)
+    import numpy as np
+    rend_ixs = np.random.choice(len(cam_list), nview, replace=False)
+    rend_list = []
+    for i in tqdm(rend_ixs, total=len(rend_ixs)):
+        cam = cam_list[i]
 
-    gt = cam0.original_image[0:3, :, :]
+        ret = render_simple(cam, gaussians, background)
+        rendering = ret["render"]
+        # vutils.save_image(rendering, f'{rend_dir}/rend_{i}.png')
 
-    vutils.save_image(rendering, 'rend.png')
-    vutils.save_image(gt, 'gt.png')
+        rend_list.append(rendering)
+
+    rend_all = torch.cat(rend_list, dim=-1)
+    vutils.save_image(rend_all, f'paper_figs/rend/{objv_id}.png')
+
+def test_render_batch():
+
+    sh_degree = 3 # hardcoded
+    gaussians = GaussianModel(sh_degree)
+    bg_color = [0, 0, 0]
+    background = torch.tensor(bg_color, dtype=torch.float32, device="cuda")
+
+    # transforms_path = "./gaussian-splatting/output_1211/0b1b44a101734a418455f738272e51a0/cameras.json"
+    
+
+    # load cam
+    
+    ## camera
+    # 1. load camera info 
+    objv_id = "0b1b44a101734a418455f738272e51a0"
+    transforms_path = f"data_objaverse_render/{objv_id}/transforms_train.json"
+    cam_info_list = readCamSimple(transforms_path)
+
+    # 2. load cam model from cam info
+    cam_list = []
+    for id, c in enumerate(cam_info_list):
+        camera = loadCamSimple(c, id, device="cuda")
+        cam_list.append(camera)
+
+
+    objv_ids = os.listdir("gaussian-splatting/output_1211")
+    cnt = 0
+    for objv_id in objv_ids:
+        if cnt > 100: break
+
+        ## ply path
+        ply_path = f"gaussian-splatting/output_1211/{objv_id}/point_cloud/iteration_30000/point_cloud.ply"
+        if not os.path.exists(ply_path): continue
+        gaussians.load_ply(ply_path)
+
+        # render nview images
+        # rend_dir = f"paper_figs/rend/{objv_id}"
+        # if not os.path.exists(rend_dir): os.makedirs(rend_dir)
+
+        nview = 5
+        # rend_ixs = range(0, len(cam_list), len(cam_list) // nview)
+        rend_ixs = np.random.choice(len(cam_list), nview, replace=False)
+        rend_list = []
+        for i in tqdm(rend_ixs, total=len(rend_ixs)):
+            cam = cam_list[i]
+
+            ret = render_simple(cam, gaussians, background)
+            rendering = ret["render"]
+            # vutils.save_image(rendering, f'{rend_dir}/rend_{i}.png')
+
+            rend_list.append(rendering)
+
+        rend_all = torch.cat(rend_list, dim=-1)
+        vutils.save_image(rend_all, f'paper_figs/rend/{objv_id}.png')
+        cnt += 1
+        print(f"cnt: {cnt}")
+
+
+    # cam0 = cam_list[0]
+
+    # ret = render_simple(cam0, gaussians, background)
+    # rendering = ret["render"]
+
+    # gt = cam0.original_image[0:3, :, :]
+
+    # vutils.save_image(rendering, 'rend.png')
+    # vutils.save_image(gt, 'gt.png')
 
 def infinite_iter(dataloader):
     while True:
@@ -66,6 +145,8 @@ def infinite_iter(dataloader):
 
 if __name__ == "__main__":
     # test_render()
+    test_render_batch()
+    0/0
 
     # import pdb; pdb.set_trace()
     

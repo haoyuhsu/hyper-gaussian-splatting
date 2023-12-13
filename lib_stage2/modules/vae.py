@@ -11,21 +11,47 @@ class PointNet2Encoder(nn.Module):
 
         self.in_c = 59
 
-        self.conv1 = nn.Conv1d(self.in_c, 64, 1)
-        self.conv2 = nn.Conv1d(64, 128, 1)
-        self.conv3 = nn.Conv1d(128, 256, 1)
-        self.conv4 = nn.Conv1d(256, 512, 1)
-        self.conv5 = nn.Conv1d(512, 1024, 1)
+        self.conv1 = nn.Sequential(
+            nn.Conv1d(self.in_c, 64, 1),
+            nn.BatchNorm1d(64),
+            nn.ReLU(),
+        )
+        self.conv2 = nn.Sequential(
+            nn.Conv1d(64, 128, 1),
+            nn.BatchNorm1d(128),
+            nn.ReLU(),
+        )
+        self.conv3 = nn.Sequential(
+            nn.Conv1d(128, 256, 1),
+            nn.BatchNorm1d(256),
+            nn.ReLU(),
+        )
+        self.conv4 = nn.Sequential(
+            nn.Conv1d(256, 512, 1),
+            nn.BatchNorm1d(512),
+            nn.ReLU(),
+        )
+        self.conv5 = nn.Sequential(
+            nn.Conv1d(512, 1024, 1),
+            nn.BatchNorm1d(1024),
+            nn.ReLU(),
+        )
 
         self.fc1 = nn.Linear(1024, 512)
         self.fc2 = nn.Linear(512, 256)
 
     def forward(self, x):
-        x = F.relu(self.conv1(x))
-        x = F.relu(self.conv2(x))
-        x = F.relu(self.conv3(x))
-        x = F.relu(self.conv4(x))
-        x = F.relu(self.conv5(x))
+        x = self.conv1(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
+        x = self.conv5(x)
+
+        # x = F.relu(self.conv1(x))
+        # x = F.relu(self.conv2(x))
+        # x = F.relu(self.conv3(x))
+        # x = F.relu(self.conv4(x))
+        # x = F.relu(self.conv5(x))
         x = torch.max(x, 2, keepdim=True)[0]
         x = x.view(-1, 1024)
         x = F.relu(self.fc1(x))
@@ -57,8 +83,11 @@ class VAE(nn.Module):
         self.fc_decoder = nn.Linear(self.latent_dim, 512 * sh_n)
         self.decoder = nn.Sequential(
             nn.ConvTranspose1d(512, 256, 1, stride=2, output_padding=1),
+            nn.BatchNorm1d(256),
             nn.ConvTranspose1d(256, 256, 1, stride=2, output_padding=1),
+            nn.BatchNorm1d(256),
             nn.ConvTranspose1d(256, 128, 1, stride=2, output_padding=1),
+            nn.BatchNorm1d(128),
             nn.ConvTranspose1d(128, self.in_c, 1, stride=2, output_padding=1),
         )
 

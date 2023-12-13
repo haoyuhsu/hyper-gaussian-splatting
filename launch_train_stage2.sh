@@ -15,7 +15,7 @@ z_dim=2048
 
 # TODO: norm gt rots?
 
-exp_name="${DATE_WITH_TIME}-lr_${lr}-z_${z_dim}-kl_${kl_weight}-opac_${opac_weight}-scale_${scale_weight}"
+exp_name="${DATE_WITH_TIME}-lr_${lr}-z_${z_dim}-kl_${kl_weight}-opac_${opac_weight}-scale_${scale_weight}-addBN"
 
 cmd="python train_second_stage.py --exp_name ${exp_name} --lr ${lr} --kl_weight ${kl_weight} \
                     --opac_weight ${opac_weight} --scale_weight ${scale_weight}"
