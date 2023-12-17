@@ -17,7 +17,7 @@
 - Reference: https://www.blender.org/download/
 
 - Reference (Building Blender on server): https://wiki.blender.org/wiki/Building_Blender/Linux/Ubuntu
-    ```
+    ```bash
     sudo apt install build-essential git subversion cmake libx11-dev libxxf86vm-dev libxcursor-dev libxi-dev libxrandr-dev libxinerama-dev libegl-dev
     sudo apt install libwayland-dev wayland-protocols libxkbcommon-dev libdbus-1-dev linux-libc-dev
     sudo apt install libsm6
@@ -31,7 +31,7 @@
 - Follow https://github.com/graphdeco-inria/gaussian-splatting for installing 3D Gaussian Splatting environment. (using CUDA 11.8 recommended)
 
 - Install [Objaverse API](https://objaverse.allenai.org):
-    ```
+    ```bash
     pip install objaverse
     ```
 
@@ -39,7 +39,7 @@
 ## Run Code Step-by-Step
 
 ### Dataset Sampling from Objaverse
-```
+```bash
 bash dl_objaverse.sh
 
 python download_objaverse.py \
@@ -54,7 +54,7 @@ python download_objaverse.py \
 - ***use_lvis***: use LVIS annotations in Objaverse 1.0 for specific object categories, specify desired category names in ***object_names_list***.
 
 ### Dataset Rendering in Blender
-```
+```bash
 bash rend_objaverse.sh
 
 export BLENDER_PATH='path_to_blender'
@@ -70,19 +70,19 @@ $BLENDER_PATH --background --python bpy_render_views.py -- \
 - ***device***: use GPU for rendering in Blender
 
 ### Training 3D Gaussians
-```
+```bash
 bash train_gs.sh   # training
 bash vis_gs.sh     # visualizing in viewer
 bash rend_gs.sh    # rendering images
 ```
 
 ### Training GSH-Net
-```
+```bash
 bash launch_train_stage2.sh
 ```
 
 ### Utility Functions (if required)
-```
+```bash
 # download assets from ShapeNet
 wget http://shapenet.cs.stanford.edu/shapenet/obj-zip/ShapeNetCore.v1.zip
 python download_shapenet.py \
